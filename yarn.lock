@@ -644,6 +644,13 @@
     fastify-plugin "^5.0.0"
     toad-cache "^3.7.0"
 
+"@hookform/resolvers@^5.2.2":
+  version "5.2.2"
+  resolved "https://registry.yarnpkg.com/@hookform/resolvers/-/resolvers-5.2.2.tgz#5ac16cd89501ca31671e6e9f0f5c5d762a99aa12"
+  integrity sha512-A/IxlMLShx3KjV/HeTcTfaMxdwy690+L/ZADoeaTltLx+CVuzkeVIPuybK3jrRfw7YZnmdKsVVHAlEPIAEUNlA==
+  dependencies:
+    "@standard-schema/utils" "^0.3.0"
+
 "@humanfs/core@^0.19.1":
   version "0.19.1"
   resolved "https://registry.yarnpkg.com/@humanfs/core/-/core-0.19.1.tgz#17c55ca7d426733fe3c561906b8173c336b40a77"
@@ -1273,6 +1280,11 @@
   integrity sha512-36/hTbH2uaWuGVERyC6da9YwGWnzUZXuPro/F2LfsdOsLnCojz/iSH8MxUt/FD2S5XBSVPhmArFUXcpCQ2Hkiw==
   dependencies:
     "@sinonjs/commons" "^3.0.1"
+
+"@standard-schema/utils@^0.3.0":
+  version "0.3.0"
+  resolved "https://registry.yarnpkg.com/@standard-schema/utils/-/utils-0.3.0.tgz#3d5e608f16c2390c10528e98e59aef6bf73cae7b"
+  integrity sha512-e7Mew686owMaPJVNNLs55PUvgz371nKgwsc4vxE49zsODpJEnxgxRo2y/OKrqueavXgZNMDVj3DdHFlaSAeU8g==
 
 "@swc/helpers@0.5.15":
   version "0.5.15"
@@ -5297,6 +5309,11 @@ react-dom@^18.3.1:
     loose-envify "^1.1.0"
     scheduler "^0.23.2"
 
+react-hook-form@^7.70.0:
+  version "7.70.0"
+  resolved "https://registry.yarnpkg.com/react-hook-form/-/react-hook-form-7.70.0.tgz#256fa2ca71633c99f16ca2cd6074628aa52001b2"
+  integrity sha512-COOMajS4FI3Wuwrs3GPpi/Jeef/5W1DRR84Yl5/ShlT3dKVFUfoGiEZ/QE6Uw8P4T2/CLJdcTVYKvWBMQTEpvw==
+
 react-is@^16.13.1:
   version "16.13.1"
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-16.13.1.tgz#789729a4dc36de2999dc156dd6c1d9c18cea56a4"
@@ -6492,3 +6509,8 @@ zod@^4.0.17:
   version "4.0.17"
   resolved "https://registry.yarnpkg.com/zod/-/zod-4.0.17.tgz#95931170715f73f7426c385c237b7477750d6c8d"
   integrity sha512-1PHjlYRevNxxdy2JZ8JcNAw7rX8V9P1AKkP+x/xZfxB0K5FYfuV+Ug6P/6NVSR2jHQ+FzDDoDHS04nYUsOIyLQ==
+
+zustand@^5.0.9:
+  version "5.0.9"
+  resolved "https://registry.yarnpkg.com/zustand/-/zustand-5.0.9.tgz#389dcd0309b9c545d7a461bd3c54955962847654"
+  integrity sha512-ALBtUj0AfjJt3uNRQoL1tL2tMvj6Gp/6e39dnfT6uzpelGru8v1tPOGBzayOWbPJvujM8JojDk3E1LxeFisBNg==

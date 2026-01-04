@@ -9,31 +9,32 @@ import { CreateTenantController } from "./controllers/create-tenant-controller";
 import { EditPlanController } from "./controllers/edit-plan-controller";
 import { GetAllPlansController } from "./controllers/get-all-plans-controller";
 import { VerifyAccountController } from "./controllers/verify-account-controller";
+import { CompleteOnboardingController } from "./controllers/complete-onboarding-controller";
 import { CreateDraftPostController } from "./controllers/marketing/create-draft-post-controller";
 import { detectTenantMiddleware } from "./middlewares/detect-tenant";
 import { errorHandlerMiddleware } from "./middlewares/error-handler";
 
 const registerRoutes = (server: FastifyInstance, env = _env) => {
   server.setErrorHandler(
-    errorHandlerMiddleware(LoggerFactory.createDefault(env)),
+    errorHandlerMiddleware(LoggerFactory.createDefault(env))
   );
 
   // ==================System Admin Routes==================
   server.register(
     (systemRoutes) => {
       systemRoutes.post("/plans", (request, reply) =>
-        new CreatePlanController(request, reply, env).handle(),
+        new CreatePlanController(request, reply, env).handle()
       );
 
       systemRoutes.put("/plans", (request, reply) =>
-        new EditPlanController(request, reply, env).handle(),
+        new EditPlanController(request, reply, env).handle()
       );
 
       systemRoutes.get("/plans", (request, reply) =>
-        new GetAllPlansController(request, reply, env).handle(),
+        new GetAllPlansController(request, reply, env).handle()
       );
     },
-    { prefix: "/api/v1/system" },
+    { prefix: "/api/v1/system" }
   );
   // ===================================================
 
@@ -46,18 +47,22 @@ const registerRoutes = (server: FastifyInstance, env = _env) => {
       });
 
       routes.addHook("preHandler", (request, reply) =>
-        detectTenantMiddleware(request, reply, tenantRepository, env),
+        detectTenantMiddleware(request, reply, tenantRepository, env)
       );
 
       routes.post("/tenants", (request, reply) =>
-        new CreateTenantController(request, reply, env).handle(),
+        new CreateTenantController(request, reply, env).handle()
       );
 
       routes.post("/accounts-verification/verify-account", (request, reply) =>
-        new VerifyAccountController(request, reply, env).handle(),
+        new VerifyAccountController(request, reply, env).handle()
+      );
+
+      routes.post("/onboarding/complete", (request, reply) =>
+        new CompleteOnboardingController(request, reply, env).handle()
       );
     },
-    { prefix: "/api/v1" },
+    { prefix: "/api/v1" }
   );
   // ===================================================
 
@@ -70,17 +75,17 @@ const registerRoutes = (server: FastifyInstance, env = _env) => {
       });
 
       marketingRoutes.addHook("preHandler", (request, reply) =>
-        detectTenantMiddleware(request, reply, tenantRepository, env),
+        detectTenantMiddleware(request, reply, tenantRepository, env)
       );
 
       marketingRoutes.post("/posts/draft", (request, reply) =>
-        new CreateDraftPostController(request, reply, env).handle(),
+        new CreateDraftPostController(request, reply, env).handle()
       );
 
       // Futuro: Rota para listar o calendário
       // marketingRoutes.get("/posts", ...);
     },
-    { prefix: "/api/v1/marketing" },
+    { prefix: "/api/v1/marketing" }
   );
   // ===================================================
 };

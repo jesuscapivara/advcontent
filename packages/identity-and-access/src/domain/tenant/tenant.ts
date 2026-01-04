@@ -1,11 +1,15 @@
 import z from "zod";
 
 import { Entity, EntityProps } from "@org/common/entity";
+import { Event } from "@org/common/event";
 
+import { Branding, BrandingProps } from "./branding";
 import { ContactInformation, ContactInformationProps } from "./contact-address";
 import { Owner, OwnerProps } from "./owner";
+import { ProfessionalProfile, ProfessionalProfileProps } from "./professional-profile";
 import { Slug } from "./slug";
 import { Subscription, SubscriptionProps } from "./subscription";
+import { TenantOnboardingCompletedEvent } from "./tenant-onboarding-completed-event";
 import { TenantStatus } from "./tenant-status";
 
 type Props = {
@@ -17,6 +21,9 @@ type Props = {
   subscription: Subscription;
 
   contactInformation?: ContactInformationProps;
+  branding?: Branding;
+  profile?: ProfessionalProfile;
+  onboardingCompletedAt?: Date;
 } & EntityProps;
 
 const TenantSchema = z.object({
@@ -37,6 +44,14 @@ class Tenant extends Entity {
 
   contactAddress?: ContactInformation;
 
+  branding?: Branding;
+
+  profile?: ProfessionalProfile;
+
+  onboardingCompletedAt?: Date;
+
+  private domainEvents: Event[] = [];
+
   constructor(props: Props) {
     super(props);
     this.owner = new Owner(props.owner);
@@ -50,12 +65,19 @@ class Tenant extends Entity {
       new ContactInformation(props.contactInformation);
 
     this.subscription = props.subscription;
+    this.branding = props.branding;
+    this.profile = props.profile;
+    this.onboardingCompletedAt = props.onboardingCompletedAt;
 
     TenantSchema.parse(this);
   }
 
   get isActive() {
     return this.status === TenantStatus.Active;
+  }
+
+  get isOnboardingCompleted() {
+    return !!this.onboardingCompletedAt;
   }
 
   activate() {
@@ -67,6 +89,38 @@ class Tenant extends Entity {
       subscriptionId,
       status: Subscription.Status.Ready,
     });
+  }
+
+  completeOnboarding(branding: BrandingProps, profile: ProfessionalProfileProps): void {
+    if (this.isOnboardingCompleted) {
+      throw new Error("Onboarding já foi completado para este tenant");
+    }
+
+    this.branding = Branding.create(branding);
+    this.profile = ProfessionalProfile.create(profile);
+    this.onboardingCompletedAt = new Date();
+    this.updatedAt = new Date();
+
+    // Dispara evento para o Contexto de Marketing
+    this.addDomainEvent(
+      TenantOnboardingCompletedEvent.create({
+        tenantId: this.id,
+        expertiseAreas: this.profile.expertiseAreas,
+        toneOfVoice: this.profile.toneOfVoice,
+      }),
+    );
+  }
+
+  private addDomainEvent(event: Event): void {
+    this.domainEvents.push(event);
+  }
+
+  getDomainEvents(): Event[] {
+    return [...this.domainEvents];
+  }
+
+  clearDomainEvents(): void {
+    this.domainEvents = [];
   }
 
   static create(id: string, owner: OwnerProps, name: string, slug: string) {
