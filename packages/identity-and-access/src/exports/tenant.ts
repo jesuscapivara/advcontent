@@ -16,6 +16,7 @@ export { TenantOnboardingCompletedEvent } from "../domain/tenant/tenant-onboardi
 
 export type { TenantCreatedEventProps } from "../domain/tenant/tenant-created-event";
 export type { TenantRepository } from "../domain/tenant/tenant-repository";
+export type { TenantOnboardingCompletedEventProps } from "../domain/tenant/tenant-onboarding-completed-event";
 export type {
   CreateTenantInput,
   CreateTenantOutput,

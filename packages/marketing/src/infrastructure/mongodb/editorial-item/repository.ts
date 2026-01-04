@@ -4,7 +4,10 @@ import {
   CollectionType,
   TenantIdSchemaFactory,
 } from "@org/common/mongo";
-import { EditorialItem, EditorialStatus } from "../../../domain/editorial-calendar/editorial-item";
+import {
+  EditorialItem,
+  EditorialStatus,
+} from "../../../domain/editorial-calendar/editorial-item";
 import { EditorialItemRepository } from "../../../domain/editorial-calendar/editorial-item-repository";
 import { EditorialItemMapper } from "./mapper";
 import { EditorialItemSchema } from "./schema";
@@ -35,7 +38,7 @@ export class MongoEditorialItemRepository
           updatedAt: new Date(),
         },
       },
-      { session: this.session },
+      { session: this.session }
     );
 
     if (!result.modifiedCount) {
@@ -70,7 +73,7 @@ export class MongoEditorialItemRepository
   async findByMonth(
     tenantId: string,
     month: number,
-    year: number,
+    year: number
   ): Promise<EditorialItem[]> {
     const start = new Date(year, month - 1, 1);
     const end = new Date(year, month, 0);
@@ -79,6 +82,18 @@ export class MongoEditorialItemRepository
       tenantId: TenantIdSchemaFactory.create(tenantId),
       scheduledAt: { $gte: start, $lte: end },
     });
+
+    const schemas = await cursor.toArray();
+    return schemas.map(EditorialItemMapper.toDomain);
+  }
+
+  // Método para o Feed (Lista todos os posts do tenant)
+  async findByTenant(tenantId: string): Promise<EditorialItem[]> {
+    const cursor = this.collection
+      .find({
+        tenantId: TenantIdSchemaFactory.create(tenantId),
+      })
+      .sort({ createdAt: -1 }); // Mais recentes primeiro
 
     const schemas = await cursor.toArray();
     return schemas.map(EditorialItemMapper.toDomain);

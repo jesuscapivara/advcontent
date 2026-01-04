@@ -5,7 +5,12 @@ interface EditorialItemRepository {
   save(item: EditorialItem): Promise<void>;
   getById(id: string): Promise<EditorialItem | null>;
   findScheduledToPublish(now: Date): Promise<EditorialItem[]>;
-  findByMonth(tenantId: string, month: number, year: number): Promise<EditorialItem[]>;
+  findByMonth(
+    tenantId: string,
+    month: number,
+    year: number
+  ): Promise<EditorialItem[]>;
+  findByTenant(tenantId: string): Promise<EditorialItem[]>;
   nextIdentity(): string;
 }
 

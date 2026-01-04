@@ -6,6 +6,7 @@ import { LoggerFactory, MongoEventRepository } from "@org/common/event";
 import { MongoConnection } from "@org/common/mongo";
 import { RequestAccountVerificationListener } from "@org/identity-and-access/account-verification";
 import { ProvisionTrialSubscriptionListener } from "@org/subscription/subscription";
+import { GenerateOnboardingContentListener } from "@org/marketing";
 
 import { BullMQEventBus } from "./bullmq-event-bus";
 import { EventDispatcher } from "./event-dispatcher";
@@ -20,6 +21,7 @@ const startServer = async () => {
 
   eventBus.registerListener(RequestAccountVerificationListener.asObject());
   eventBus.registerListener(ProvisionTrialSubscriptionListener.asObject());
+  eventBus.registerListener(GenerateOnboardingContentListener.asObject());
 
   const dispatcher = new EventDispatcher({
     eventBus,

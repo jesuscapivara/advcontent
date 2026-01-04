@@ -5,7 +5,16 @@ import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { ArrowRight, ArrowLeft, Check, Palette, User, Mic } from "lucide-react";
+import {
+  ArrowRight,
+  ArrowLeft,
+  Check,
+  Palette,
+  User,
+  Mic,
+  Loader2,
+  CheckCircle2,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -58,11 +67,20 @@ const TONE_OPTIONS = [
   { value: "SIMPLIFIED", label: "Simplificado" },
 ];
 
+const TONE_LABELS: Record<string, string> = {
+  COMBATIVE: "Combativo",
+  EMPATHETIC: "Empático",
+  TECHNICAL: "Técnico",
+  SIMPLIFIED: "Simplificado",
+};
+
 export default function OnboardingPage() {
   const router = useRouter();
   const { currentStep, data, setStep, updateData, reset } =
     useOnboardingStore();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isGenerating, setIsGenerating] = useState(false);
+  const [generationStep, setGenerationStep] = useState(0);
 
   const profileForm = useForm<ProfileFormData>({
     resolver: zodResolver(profileSchema),
@@ -89,11 +107,22 @@ export default function OnboardingPage() {
     setStep(1);
   };
 
+  const generationSteps = [
+    "Salvando sua identidade visual...",
+    `Analisando seu perfil (Tom: ${TONE_LABELS[data.toneOfVoice as string] || "Técnico"})...`,
+    "Consultando jurisprudência recente...",
+    "Criando 3 sugestões de pauta exclusivas...",
+    "Finalizando sua Sala de Guerra...",
+  ];
+
   const handleBrandingSubmit = async (formData: BrandingFormData) => {
     updateData(formData);
     setIsSubmitting(true);
+    setIsGenerating(true);
+    setGenerationStep(0);
 
     try {
+      // Dispara o request (Backend inicia o processo assíncrono)
       await axios.post(
         API_URL,
         {
@@ -115,13 +144,20 @@ export default function OnboardingPage() {
         }
       );
 
+      // Simula o progresso visualmente enquanto o Worker roda no backend
+      // Isso dá tempo (5-8s) para o Worker criar os posts antes de redirecionar
+      for (let i = 0; i < generationSteps.length; i++) {
+        setGenerationStep(i);
+        await new Promise((r) => setTimeout(r, 1500)); // 1.5s por passo
+      }
+
       reset();
-      router.push("/editor");
+      router.push("/editor"); // Agora sim, vai ter dados lá!
     } catch (error) {
       console.error("Erro ao completar onboarding:", error);
-      alert("Erro ao salvar. Tente novamente.");
-    } finally {
+      setIsGenerating(false);
       setIsSubmitting(false);
+      alert("Erro ao salvar. Tente novamente.");
     }
   };
 
@@ -298,6 +334,50 @@ export default function OnboardingPage() {
   ];
 
   const currentStepData = steps[currentStep];
+
+  // Tela de Espera (Sala de Espera)
+  if (isGenerating) {
+    return (
+      <div className="min-h-screen bg-slate-50 flex flex-col items-center justify-center p-4">
+        <div className="w-full max-w-md space-y-8 bg-white p-8 rounded-2xl shadow-xl">
+          <div className="text-center">
+            <h2 className="text-2xl font-bold text-slate-900 mb-2">
+              Configurando sua IA
+            </h2>
+            <p className="text-slate-500">Isso leva menos de um minuto.</p>
+          </div>
+
+          <div className="space-y-4">
+            {generationSteps.map((text, index) => (
+              <div
+                key={index}
+                className={`flex items-center gap-3 transition-all duration-500 ${
+                  index > generationStep ? "opacity-30" : "opacity-100"
+                }`}
+              >
+                {index < generationStep ? (
+                  <CheckCircle2 className="h-5 w-5 text-green-500" />
+                ) : index === generationStep ? (
+                  <Loader2 className="h-5 w-5 text-indigo-600 animate-spin" />
+                ) : (
+                  <div className="h-5 w-5 rounded-full border-2 border-slate-200" />
+                )}
+                <span
+                  className={`text-sm font-medium ${
+                    index === generationStep
+                      ? "text-indigo-900"
+                      : "text-slate-600"
+                  }`}
+                >
+                  {text}
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 flex items-center justify-center p-4">

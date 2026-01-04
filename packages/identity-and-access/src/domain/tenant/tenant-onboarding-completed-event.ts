@@ -27,3 +27,4 @@ class TenantOnboardingCompletedEvent extends Event<Payload> {
 }
 
 export { TenantOnboardingCompletedEvent };
+export type { Props as TenantOnboardingCompletedEventProps };
