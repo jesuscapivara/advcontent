@@ -1,0 +1,38 @@
+{
+  "name": "@org/subscription",
+  "version": "0.0.0",
+  "private": true,
+  "exports": {
+    "./catalog": {
+      "types": "./src/exports/catalog.ts",
+      "default": "./dist/exports/catalog.js"
+    },
+    "./subscription": {
+      "types": "./src/exports/subscription.ts",
+      "default": "./dist/exports/subscription.js"
+    }
+  },
+  "scripts": {
+    "build": "tsc",
+    "lint": "eslint . --fix --max-warnings 0",
+    "dev": "tsc -w",
+    "test": "jest",
+    "clean": "rm -rf .turbo node_modules dist",
+    "check-types": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@org/common": "*",
+    "@org/identity-and-access": "*",
+    "mongodb": "^6.19.0",
+    "zod": "^4.0.17"
+  },
+  "devDependencies": {
+    "@org/eslint-config": "*",
+    "@org/typescript-config": "*",
+    "@types/jest": "^30.0.0",
+    "eslint": "9.31.0",
+    "jest": "^30.0.5",
+    "ts-jest": "^29.4.1",
+    "typescript": "5.9.2"
+  }
+}

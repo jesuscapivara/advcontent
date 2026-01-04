@@ -1,0 +1,70 @@
+{
+  "name": "@org/common",
+  "version": "0.0.0",
+  "private": true,
+  "exports": {
+    "./event": {
+      "types": "./src/exports/event.ts",
+      "default": "./dist/exports/event.js"
+    },
+    "./use-case": {
+      "types": "./src/use-case/index.ts",
+      "default": "./dist/use-case/index.js"
+    },
+    "./utils": {
+      "types": "./src/utils/index.ts",
+      "default": "./dist/utils/index.js"
+    },
+    "./error": {
+      "types": "./src/error/index.ts",
+      "default": "./dist/error/index.js"
+    },
+    "./entity": {
+      "types": "./src/entity/index.ts",
+      "default": "./dist/entity/index.js"
+    },
+    "./result": {
+      "types": "./src/result/index.ts",
+      "default": "./dist/result/index.js"
+    },
+    "./logger": {
+      "types": "./src/exports/logger.ts",
+      "default": "./dist/exports/logger.js"
+    },
+    "./env": {
+      "types": "./src/env/index.ts",
+      "default": "./dist/env/index.js"
+    },
+    "./mongo": {
+      "types": "./src/infrastructure/mongo/index.ts",
+      "default": "./dist/infrastructure/mongo/index.js"
+    },
+    "./money": {
+      "types": "./src/exports/money.ts",
+      "default": "./dist/exports/money.js"
+    }
+  },
+  "scripts": {
+    "build": "tsc",
+    "lint": "eslint . --fix --max-warnings 0",
+    "dev": "tsc -w",
+    "test": "jest --passWithNoTests",
+    "clean": "rm -rf .turbo node_modules dist",
+    "check-types": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@org/eslint-config": "*",
+    "@org/typescript-config": "*",
+    "@types/jest": "^30.0.0",
+    "eslint": "9.31.0",
+    "jest": "^30.0.5",
+    "ts-jest": "^29.4.1",
+    "typescript": "5.9.2"
+  },
+  "dependencies": {
+    "bullmq": "^5.57.0",
+    "ts-node": "^10.9.2",
+    "uuid": "^11.1.0",
+    "zod": "^4.0.17"
+  }
+}

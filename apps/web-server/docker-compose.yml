@@ -1,0 +1,46 @@
+version: '3.9'
+
+services:
+  mongo:
+    image: mongo:7.0
+    container_name: org-mongo
+    ports:
+      - '27017:27017'
+    command: mongod --replSet rs0 --bind_ip_all
+    volumes:
+      - mongo-data:/data/db
+
+  mongo-init-replicaset:
+    image: mongo:7.0
+    container_name: mongo-init-replicaset
+    depends_on:
+      - mongo
+    entrypoint:
+      - bash
+      - -c
+      - |
+        echo "Waiting for Mongo to start..." &&
+        sleep 5 &&
+        mongosh --host mongo:27017 --eval '
+          rs.initiate();
+          cfg = rs.config();
+          cfg.members[0].host = "localhost:27017";
+          rs.reconfig(cfg, {force:true});
+          print("Replica set initialized");
+        '
+    restart: 'no'
+
+  redis:
+    image: redis:8
+    container_name: org-redis
+    ports:
+      - '6379:6379'
+    volumes:
+      - redis-data:/data
+    command: redis-server --appendonly yes
+
+volumes:
+  mongo-data:
+    driver: local
+  redis-data:
+    driver: local

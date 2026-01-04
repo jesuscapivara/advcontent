@@ -1,0 +1,42 @@
+{
+  "name": "web-server",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsx watch src/server.ts",
+    "migrate:new": "migrate-mongo create",
+    "migrate:up": "migrate-mongo up",
+    "migrate:down": "migrate-mongo down",
+    "seed:dev": "ts-node src/mongodb/seeds/development-seed.ts",
+    "check-types": "tsc --noEmit",
+    "clean": "rm -rf .turbo node_modules dist",
+    "lint": "eslint . --fix --max-warnings 0"
+  },
+  "dependencies": {
+    "@fastify/cors": "^11.1.0",
+    "@fastify/helmet": "^13.0.1",
+    "@fastify/rate-limit": "^10.3.0",
+    "@org/common": "*",
+    "@org/identity-and-access": "*",
+    "@org/marketing": "*",
+    "@org/subscription": "*",
+    "dotenv": "^17.2.3",
+    "fastify": "^5.5.0",
+    "migrate-mongo": "^12.1.3",
+    "mongodb": "^6.18.0",
+    "uuid": "^11.1.0",
+    "zod": "^4.0.17"
+  },
+  "devDependencies": {
+    "@org/eslint-config": "*",
+    "@org/typescript-config": "*",
+    "@types/jest": "^30.0.0",
+    "eslint": "9.31.0",
+    "jest": "^30.0.5",
+    "ts-jest": "^29.4.1",
+    "ts-node": "^10.9.2",
+    "tsx": "^4.20.4",
+    "typescript": "5.9.2"
+  }
+}

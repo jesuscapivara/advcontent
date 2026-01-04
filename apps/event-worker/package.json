@@ -1,0 +1,31 @@
+{
+  "name": "event-worker",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsx watch src/index.ts",
+    "check-types": "tsc --noEmit",
+    "clean": "rm -rf .turbo node_modules dist",
+    "lint": "eslint . --fix --max-warnings 0"
+  },
+  "dependencies": {
+    "@org/common": "*",
+    "@org/identity-and-access": "*",
+    "@org/subscription": "*",
+    "bullmq": "^5.57.0",
+    "mongodb": "^6.18.0"
+  },
+  "devDependencies": {
+    "@org/eslint-config": "*",
+    "@org/typescript-config": "*",
+    "@types/jest": "^30.0.0",
+    "eslint": "9.31.0",
+    "jest": "^30.0.5",
+    "ts-jest": "^29.4.1",
+    "ts-node": "^10.9.2",
+    "tsx": "^4.20.4",
+    "typescript": "5.9.2"
+  }
+}
