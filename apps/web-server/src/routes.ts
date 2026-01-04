@@ -12,6 +12,7 @@ import { VerifyAccountController } from "./controllers/verify-account-controller
 import { CompleteOnboardingController } from "./controllers/complete-onboarding-controller";
 import { CreateDraftPostController } from "./controllers/marketing/create-draft-post-controller";
 import { GetEditorialFeedController } from "./controllers/marketing/get-editorial-feed-controller";
+import { GetTenantBrandingController } from "./controllers/get-tenant-branding-controller";
 import { detectTenantMiddleware } from "./middlewares/detect-tenant";
 import { errorHandlerMiddleware } from "./middlewares/error-handler";
 
@@ -61,6 +62,10 @@ const registerRoutes = (server: FastifyInstance, env = _env) => {
 
       routes.post("/onboarding/complete", (request, reply) =>
         new CompleteOnboardingController(request, reply, env).handle()
+      );
+
+      routes.get("/tenant/branding", (request, reply) =>
+        new GetTenantBrandingController(request, reply, env).handle()
       );
     },
     { prefix: "/api/v1" }

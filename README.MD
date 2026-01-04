@@ -327,26 +327,27 @@ yarn migrate:up
 
 ## 📝 Próximos Passos
 
-### Curto Prazo
+> **📋 Para ver o roadmap completo e detalhado, consulte [ROADMAP.md](./ROADMAP.md)**
 
-- [ ] Autenticação JWT e middleware de autorização
-- [ ] Tela de calendário editorial
-- [ ] Geração de imagens com DALL-E ou Midjourney
-- [ ] Validação de compliance mais robusta
+### Status Atual
 
-### Médio Prazo
+✅ **Implementado:**
+- Compliance HUD em tempo real
+- Sistema de Templates Dinâmicos (3 templates)
+- Integração com branding do tenant
+- Geração de posts com IA (OpenAI GPT-4o-mini)
 
-- [ ] Integração com Instagram API (agendamento automático)
-- [ ] Dashboard de analytics (engajamento, alcance)
-- [ ] Templates personalizáveis por escritório
-- [ ] Sistema de aprovação em múltiplas etapas
+🟡 **Em Desenvolvimento:**
+- Feed RSS de notícias jurídicas (alta prioridade)
+- Gestão profissional de imagens (Unsplash/Cloud Vision)
+- Renderização server-side (Puppeteer/Satori)
 
-### Longo Prazo
+### Próximas Features
 
-- [ ] Feed RSS de notícias jurídicas (STJ, STF, Migalhas)
-- [ ] Agendamento automático baseado em IA
-- [ ] A/B testing de posts
-- [ ] Integração com outras redes sociais
+- [ ] **Feed RSS Integration** - Curadoria automática de pautas (STJ, STF, Migalhas)
+- [ ] **Gestão de Imagens** - Integração Unsplash, upload próprio, validação Cloud Vision
+- [ ] **Renderização Server-Side** - Qualidade consistente em todos os dispositivos
+- [ ] **Auditoria de Compliance** - Log de alterações e relatórios
 
 ---
 

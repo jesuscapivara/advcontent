@@ -36,7 +36,9 @@ export class CreateDraftPostController extends AbstractController<CreateDraftPos
         "OPENAI_API_KEY ou OPEN_AI_SECRET não configurado no .env"
       );
     }
-    const aiGenerator = new OpenAIContentGenerator(apiKey);
+    // Modelo configurável via variável de ambiente (default: gpt-4o-mini)
+    const modelId = process.env.OPENAI_MODEL_ID || "gpt-4o-mini";
+    const aiGenerator = new OpenAIContentGenerator(apiKey, modelId);
 
     const useCase = new CreateDraftPostUseCase(repository, aiGenerator);
 

@@ -40,6 +40,12 @@ JWT_SECRET="segredo_super_secreto_para_desenvolvimento_local_123"
 OPENAI_API_KEY="sk-..."
 # OU use OPEN_AI_SECRET (ambos funcionam)
 # OPEN_AI_SECRET="sk-..."
+
+# --- OpenAI Model ID (Opcional) ---
+# Modelo a ser usado para geração de conteúdo
+# Opções: "gpt-4o-mini" (padrão, econômico), "gpt-4o" (mais potente), "gpt-4o-2024-11-20", etc.
+# Deixe vazio para usar o padrão (gpt-4o-mini)
+# OPENAI_MODEL_ID="gpt-4o-mini"
 ```
 
 ## Passo 3: Personalizar os valores
@@ -64,17 +70,18 @@ OPENAI_API_KEY="sk-..."
 
 ## Variáveis Disponíveis
 
-| Variável         | Descrição                                      | Padrão                      |
-| ---------------- | ---------------------------------------------- | --------------------------- |
-| `MONGODB_URI`    | URI de conexão com MongoDB                     | `mongodb://localhost:27017` |
-| `DATABASE_NAME`  | Nome do banco de dados                         | `org`                       |
-| `PORT`           | Porta do servidor                              | `3000`                      |
-| `NODE_ENV`       | Ambiente (development/production/staging)      | `development`               |
-| `CORS_ORIGIN`    | Origens permitidas (separadas por vírgula)     | `*`                         |
-| `REDIS_HOST`     | Host do Redis                                  | `localhost`                 |
-| `REDIS_PORT`     | Porta do Redis                                 | `6379`                      |
-| `JWT_SECRET`     | Segredo para JWT                               | (nenhum)                    |
-| `OPENAI_API_KEY` | Chave da API OpenAI (para geração de conteúdo) | (nenhum)                    |
+| Variável          | Descrição                                      | Padrão                      |
+| ----------------- | ---------------------------------------------- | --------------------------- |
+| `MONGODB_URI`     | URI de conexão com MongoDB                     | `mongodb://localhost:27017` |
+| `DATABASE_NAME`   | Nome do banco de dados                         | `org`                       |
+| `PORT`            | Porta do servidor                              | `3000`                      |
+| `NODE_ENV`        | Ambiente (development/production/staging)      | `development`               |
+| `CORS_ORIGIN`     | Origens permitidas (separadas por vírgula)     | `*`                         |
+| `REDIS_HOST`      | Host do Redis                                  | `localhost`                 |
+| `REDIS_PORT`      | Porta do Redis                                 | `6379`                      |
+| `JWT_SECRET`      | Segredo para JWT                               | (nenhum)                    |
+| `OPENAI_API_KEY`  | Chave da API OpenAI (para geração de conteúdo) | (nenhum)                    |
+| `OPENAI_MODEL_ID` | Modelo OpenAI a ser usado                      | `gpt-4o-mini`               |
 
 ## Importante
 

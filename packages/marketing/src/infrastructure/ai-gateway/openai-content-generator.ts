@@ -7,10 +7,13 @@ import {
 
 export class OpenAIContentGenerator implements ContentGenerator {
   private openai: OpenAI;
+  private model: string;
 
-  constructor(apiKey: string) {
+  constructor(apiKey: string, model: string = "gpt-4o-mini") {
     if (!apiKey) throw new Error("OPEN_AI_SECRET is missing");
     this.openai = new OpenAI({ apiKey });
+    // Permite injetar via .env futuramente: process.env.OPENAI_MODEL_ID
+    this.model = model;
   }
 
   async generateDraft(request: GenerationRequest): Promise<GenerationResult> {
@@ -38,7 +41,7 @@ export class OpenAIContentGenerator implements ContentGenerator {
     `;
 
     const response = await this.openai.chat.completions.create({
-      model: "gpt-4o-mini", // Rápido, barato e inteligente o suficiente
+      model: this.model, // Dinâmico: pode ser configurado via OPENAI_MODEL_ID
       messages: [
         { role: "system", content: systemPrompt },
         { role: "user", content: userPrompt },

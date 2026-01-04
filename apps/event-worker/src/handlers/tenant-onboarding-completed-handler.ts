@@ -53,7 +53,9 @@ class TenantOnboardingCompletedHandler extends BullMQHandler<TenantOnboardingCom
       );
       generator = new LocalContentGenerator();
     } else {
-      generator = new OpenAIContentGenerator(apiKey);
+      // Modelo configurável via variável de ambiente (default: gpt-4o-mini)
+      const modelId = process.env.OPENAI_MODEL_ID || "gpt-4o-mini";
+      generator = new OpenAIContentGenerator(apiKey, modelId);
     }
 
     const useCase = new GenerateOnboardingContentUseCase(repository, generator);

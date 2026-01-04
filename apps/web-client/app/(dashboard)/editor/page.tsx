@@ -26,6 +26,13 @@ import download from "downloadjs";
 import axios from "axios";
 import { useFeed } from "@/lib/hooks/use-feed";
 import { PostCard } from "@/components/feed/post-card";
+import { ComplianceHUD } from "@/components/compliance/compliance-hud";
+import { TextHighlighter } from "@/components/compliance/text-highlighter";
+import {
+  PostTemplateRenderer,
+  TemplateId,
+} from "@/components/editor/post-templates";
+import { useTenantBranding } from "@/lib/hooks/use-tenant-branding";
 
 const API_URL = "http://localhost:3333/api/v1/marketing/posts/draft";
 
@@ -40,9 +47,12 @@ export default function EditorPage() {
   const [tone, setTone] = useState("Sóbrio");
   const [legalArea, setLegalArea] = useState("Civil");
   const [showGenerator, setShowGenerator] = useState(false);
+  const [selectedTemplate, setSelectedTemplate] =
+    useState<TemplateId>("modern-clean");
 
   const postRef = useRef<HTMLDivElement>(null);
   const { posts, isLoading: isLoadingFeed, refresh } = useFeed();
+  const { branding, isLoading: isLoadingBranding } = useTenantBranding();
 
   const mutation = useMutation({
     mutationFn: async (data: GenerateDraftPayload) => {
@@ -53,19 +63,36 @@ export default function EditorPage() {
     },
     onSuccess: () => {
       refresh(); // Atualiza o feed após gerar
-      setShowGenerator(false);
+      // Não fecha o gerador para o usuário ver o preview
     },
   });
 
   const generatedPost = mutation.data;
 
   const handleDownload = async () => {
-    if (postRef.current) {
+    if (!postRef.current) {
+      alert("Erro: Elemento não encontrado. Tente gerar o post novamente.");
+      return;
+    }
+
+    if (!generatedPost) {
+      alert("Erro: Nenhum post gerado. Gere um post primeiro.");
+      return;
+    }
+
+    try {
       const dataUrl = await toPng(postRef.current, {
         cacheBust: true,
         pixelRatio: 3,
+        backgroundColor: "#ffffff",
       });
-      download(dataUrl, "post-juridico.png");
+      download(
+        dataUrl,
+        `post-${generatedPost.headline.slice(0, 20).replace(/\s/g, "-")}.png`
+      );
+    } catch (error) {
+      console.error("Erro ao gerar imagem:", error);
+      alert("Erro ao baixar imagem. Tente novamente.");
     }
   };
 
@@ -153,6 +180,40 @@ export default function EditorPage() {
                       </Select>
                     </div>
                   </div>
+
+                  <div className="space-y-2">
+                    <label className="text-sm font-semibold text-slate-700">
+                      Template Visual
+                    </label>
+                    <Select
+                      value={selectedTemplate}
+                      onValueChange={(value) =>
+                        setSelectedTemplate(value as TemplateId)
+                      }
+                    >
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="classic-serif">
+                          Clássico Serifado
+                        </SelectItem>
+                        <SelectItem value="modern-clean">
+                          Moderno Limpo
+                        </SelectItem>
+                        <SelectItem value="breaking-news">
+                          Breaking News
+                        </SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  {/* Compliance HUD */}
+                  {generatedPost && (
+                    <ComplianceHUD
+                      text={`${generatedPost.headline} ${generatedPost.caption || ""}`}
+                    />
+                  )}
                 </div>
                 <div className="p-6 border-t bg-slate-50/50 flex flex-col gap-3">
                   <Button
@@ -188,7 +249,7 @@ export default function EditorPage() {
                         <div className="flex items-center gap-2">
                           <div className="w-8 h-8 rounded-full bg-slate-200"></div>
                           <span className="text-xs font-semibold">
-                            advocacia.digital
+                            {branding?.fullName || "advocacia.digital"}
                           </span>
                         </div>
                         <Instagram className="h-5 w-5 text-slate-800" />
@@ -196,44 +257,41 @@ export default function EditorPage() {
                       <div className="flex-1 overflow-y-auto bg-white scrollbar-hide">
                         <div
                           ref={postRef}
-                          className="aspect-square bg-slate-900 relative overflow-hidden"
+                          className="aspect-square relative overflow-hidden"
                         >
                           {mutation.isPending ? (
                             <div className="absolute inset-0 flex items-center justify-center bg-slate-900 animate-pulse text-white">
                               Gerando Design...
                             </div>
-                          ) : (
-                            <div className="w-full h-full flex flex-col justify-between p-8 bg-gradient-to-br from-slate-900 via-slate-800 to-black text-white relative">
-                              <div className="absolute top-8 right-8 w-12 h-12 border-2 border-white/20 rounded-full flex items-center justify-center">
-                                <span className="font-serif text-xl">M</span>
-                              </div>
-                              <div className="mt-8 relative z-10">
-                                <span className="inline-block px-3 py-1 bg-amber-500 text-black text-[10px] font-bold tracking-widest uppercase rounded mb-4">
-                                  {legalArea}
-                                </span>
-                                <h1 className="text-3xl font-serif leading-tight text-transparent bg-clip-text bg-gradient-to-r from-amber-200 to-amber-500">
-                                  {generatedPost.headline}
-                                </h1>
-                              </div>
-                              <div className="border-t border-white/10 pt-4 flex justify-between items-end">
-                                <div className="text-[10px] text-slate-400 uppercase tracking-widest">
-                                  Informativo Jurídico
-                                </div>
-                                <div className="text-[10px] text-white font-bold">
-                                  @seuescritorio
-                                </div>
-                              </div>
-                            </div>
-                          )}
+                          ) : generatedPost ? (
+                            <PostTemplateRenderer
+                              templateId={selectedTemplate}
+                              headline={generatedPost.headline}
+                              category={legalArea}
+                              caption={generatedPost.caption}
+                              primaryColor={branding?.primaryColor || "#0f172a"}
+                              secondaryColor={
+                                branding?.secondaryColor || "#f59e0b"
+                              }
+                              logoUrl={branding?.logoUrl}
+                              fontFamily={branding?.fontFamily}
+                            />
+                          ) : null}
                         </div>
                         <div className="px-4 py-3 flex gap-4">
                           <div className="w-6 h-6 rounded-full border-2 border-slate-900"></div>
                           <Send className="h-6 w-6 text-slate-900" />
                         </div>
                         <div className="px-4 pb-8">
-                          <p className="text-xs text-slate-600 leading-relaxed whitespace-pre-line">
-                            {mutation.isPending ? "..." : generatedPost.caption}
-                          </p>
+                          <div className="text-xs text-slate-600 leading-relaxed whitespace-pre-line">
+                            {mutation.isPending ? (
+                              "..."
+                            ) : (
+                              <TextHighlighter
+                                text={generatedPost.caption || ""}
+                              />
+                            )}
+                          </div>
                         </div>
                       </div>
                     </div>
